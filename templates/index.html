@@ -1,42 +1,36 @@
 <!DOCTYPE html>
-<html lang="en">
+<html>
 <head>
-    <meta charset="UTF-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
-    <script src="https://code.jquery.com/jquery-3.6.0.min.js" integrity="sha256-/xUj+3OJU5yExlq6GSYGSHk7tPXikynS7ogEvDej/m4=" crossorigin="anonymous"></script>
+	<title>AutoComplete</title>
+	<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.js">
+	</script>
+	
+	<script src="https://ajax.googleapis.com/ajax/libs/jqueryui/1.8.16/jquery-ui.js">
+	</script>
+	
+	<link href="http://ajax.googleapis.com/ajax/libs/jqueryui/1.8.16/themes/ui-lightness/jquery-ui.css"
+		rel="stylesheet" type="text/css" />
 </head>
 <body>
+	<h1>Welcome to GFG</h1>
+	<input type="text" id="tags">
+	
+	<script>
+$( function() {
 
-    <input type="text" name="country" id="autocomplete" class="form-control" placeholder="Enter Country name" />
- 
-    
+	var availableTags = [
+		{% for language1 in language %}
 
-<script>
-            $("#autocomplete").autocomplete({
-        
-        //lookup: countries,
+			"{{language1}}",
+            
+		{% endfor %}
+	];
+	$( "#tags" ).autocomplete({
+	source: availableTags
+	});
+} );
 
-        serviceUrl:'autocomplete', //tell the script where to send requests
-        type:'POST',
-        width: 450, //set width
-
-        //callback just to show it's working
-
-        onSelect: function (suggestion) {
-
-        $('#selection').html('You selected: ' + suggestion.value + ', ' + suggestion.data);
-
-        },
-
-        showNoSuggestionNotice: true,
-
-        noSuggestionNotice: 'Sorry, no matching results',
-
-        });
 </script>
-<script type="text/javascript" src="src/jquery.autocomplete.js"></script>
-
+	
 </body>
 </html>

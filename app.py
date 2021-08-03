@@ -1,51 +1,58 @@
-from flask import Flask,render_template,redirect,request,json
+from flask import Flask, request, render_template
 from dotenv import load_dotenv
 import os
 from pymongo import MongoClient
-
-
+  
 app = Flask(__name__)
-
+  
 load_dotenv
 mongo_uri = os.getenv('MONGO_URI')
 cluster = MongoClient(mongo_uri)
 
-db = cluster["autorecommendation"]
+db = cluster["recommendation_bar"]
 
 collection = db["list"]
+  
+@app.route("/", methods=["GET", "POST"])
+def home():
+    languages_list = []
 
-@app.route('/',methods=['GET','POST'])
-def login_page():
-    list = [
-    {"Name" :"Afghanistan"},
-    {"Name" :"Albania"},
-    {"Name" :"Barbuda"},
-    {"Name" :"Belgium"},
-    {"Name" :"China"},
-    {"Name" :"Cameron"},
-    {"Name" :"Denmark"},
-    {"Name" :"Island"},
-    {"Name" :"India"},
-    {"Name" :"Costa Rica"},
-    {"Name" :"Mauritania"},
-    {"Name" :"Madagascar"},
-    {"Name" :"Mnali"},
-    {"Name" :"Malta"}
+    if request.method == "GET":
+        languages = db.list.find()
 
-]
-    collection.insert_many(list)
-
-    return "successfull!"
-
-
-@app.route('/ajaxautocomplete',methods=['POST', 'GET'])
-def ajaxautocomplete():
-    if request.method=='POST':
         
-        result = collection.find()
-        print(result)
-    return render_template("index.html")
+
+        for language in languages:
+            languages_list.append(language['Name'])
+
+       
     
 
-if __name__ == "__main__":
+    return render_template("index.html", language = languages_list)
+
+# @app.route("/", methods=["POST"])
+# def func():
+
+        # languages = db.list.distinct("Name")
+
+    
+
+
+
+        
+
+        # languages = db.list.find({"Name":{ 
+        #         "$regex" : search_word,
+        #         '$options' : 'i'
+        #     }},{"_id":False})
+
+        # for language in languages:
+        #     languages_list.append(language)
+
+        
+          
+        # return render_template("index1.html")
+  
+  
+if __name__ == '__main__':
     app.run(debug=True)
