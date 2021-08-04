@@ -1,4 +1,4 @@
-from flask import Flask, request, render_template
+from flask import Flask, request, render_template,jsonify
 from dotenv import load_dotenv
 import os
 from pymongo import MongoClient
@@ -15,6 +15,8 @@ collection = db["list"]
   
 @app.route("/", methods=["GET", "POST"])
 def home():
+
+    
     languages_list = []
 
     if request.method == "GET":
@@ -24,33 +26,32 @@ def home():
 
         for language in languages:
             languages_list.append(language['Name'])
-
-       
     
 
     return render_template("index.html", language = languages_list)
 
-# @app.route("/", methods=["POST"])
-# def func():
-
-        # languages = db.list.distinct("Name")
-
-    
+@app.route("/submit", methods=["POST"])
+def func():
 
 
+        word = request.get_data()
 
+        word = word.decode()
+
+        print(word)
+
+        languages_list = []
         
+        languages = db.list.find({"Name":{ 
+                "$regex" : word,
+                '$options' : 'i'
+            }},{"_id":False})
 
-        # languages = db.list.find({"Name":{ 
-        #         "$regex" : search_word,
-        #         '$options' : 'i'
-        #     }},{"_id":False})
+        for language in languages:
+            languages_list.append(language['Name'])
 
-        # for language in languages:
-        #     languages_list.append(language)
+        return jsonify(result = languages_list)
 
-        
-          
         # return render_template("index1.html")
   
   
