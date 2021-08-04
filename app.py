@@ -33,26 +33,28 @@ def home():
 @app.route("/submit", methods=["POST"])
 def func():
 
-
+    
         word = request.get_data()
-
-        word = word.decode()
-
-        print(word)
-
-        languages_list = []
         
-        languages = db.list.find({"Name":{ 
-                "$regex" : word,
-                '$options' : 'i'
-            }},{"_id":False})
+        word = word.decode()
+        if len(word)!=0:
+            print(word)
 
-        for language in languages:
-            languages_list.append(language['Name'])
+            languages_list = []
+            
+            languages = db.list.find({"Name":{ 
+                    "$regex" : word,
+                    '$options' : 'i'
+                }},{"_id":False})
 
-        return jsonify(result = languages_list)
+            for language in languages:
+                languages_list.append(language['Name'])
 
-        # return render_template("index1.html")
+            return jsonify(result = languages_list)
+        return jsonify(result = [])
+        
+
+            # return render_template("index1.html")
   
   
 if __name__ == '__main__':
