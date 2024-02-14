@@ -18,77 +18,79 @@
 	</div>
 	
 	<script>
-// AJAX call for autocomplete 
-$(document).ready(function(){
-	$("#search-box").keyup(function(){
-		search_data =  $(this).val()
-		console.log("res:"+search_data);
-		if (search_data.length <3 && search_data.length > 0)
-		{
-			setTimeout(function(){
+	// AJAX call for autocomplete 
+	$(document).ready(function(){
+		$("#search-box").keyup(function(){
+			
+			search_data =  $(this).val()
+			console.log("res:"+search_data);
+			
+			if (search_data.length <3 && search_data.length > 0)
+			{
+				setTimeout(function(){
 
+					$.ajax({
+						type: "POST",
+						url: "/submit",
+						// data:'keyword='+$(this).val(),
+						data: search_data,
+						beforeSend: function(){
+							$("#search-box").css("background","#FFF url(LoaderIcon.gif) no-repeat 165px");
+						},
+						success: function(data){
+			
+						console.log("res",data.result);
+						data = data.result;
+						$("#suggesstion-box").show();
+						var start = '<ul id="country-list">';
+						var end = '</ul>'
+						for(var i = 0; i < data.length; i++)
+						{
+							start += '<li>' + data[i] + '</li>'; // if Name is property of your Person object
+						}
+						start+=end
+							$("#suggesstion-box").html(start);
+							$("#search-box").css("background","#FFF");
+							
+						}
+					});
+				},3000);
+			}
+			else{
 				$.ajax({
-		type: "POST",
-		url: "/submit",
-		// data:'keyword='+$(this).val(),
-		data: search_data,
-		beforeSend: function(){
-			$("#search-box").css("background","#FFF url(LoaderIcon.gif) no-repeat 165px");
-		},
-		success: function(data){
-		
-		console.log("res",data.result);
-		data = data.result
-		$("#suggesstion-box").show();
-		var start = '<ul id="country-list">';
-		var end = '</ul>'
-		for(var i = 0; i < data.length; i++)
-		{
-			start += '<li>' + data[i] + '</li>'; // if Name is property of your Person object
-		}
-		start+=end
-			$("#suggesstion-box").html(start);
-			$("#search-box").css("background","#FFF");
+					type: "POST",
+					url: "/submit",
+					// data:'keyword='+$(this).val(),
+					data: search_data,
+					beforeSend: function(){
+						$("#search-box").css("background","#FFF url(LoaderIcon.gif) no-repeat 165px");
+					},
+					success: function(data){
 			
-		}
+					console.log("res",data.result);
+					data = data.result
+					$("#suggesstion-box").show();
+					var start = '<ul id="country-list">';
+					var end = '</ul>'
+					for(var i = 0; i < data.length; i++)
+					{
+						start += '<li>' + data[i] + '</li>'; // if Name is property of your Person object
+					}
+					start+=end
+						$("#suggesstion-box").html(start);
+						$("#search-box").css("background","#FFF");
+						
+					}
+				});
+			}
 		});
-
-			},3000);
-		}
-		else{
-		$.ajax({
-		type: "POST",
-		url: "/submit",
-		// data:'keyword='+$(this).val(),
-		data: search_data,
-		beforeSend: function(){
-			$("#search-box").css("background","#FFF url(LoaderIcon.gif) no-repeat 165px");
-		},
-		success: function(data){
-		
-		console.log("res",data.result);
-		data = data.result
-		$("#suggesstion-box").show();
-		var start = '<ul id="country-list">';
-		var end = '</ul>'
-		for(var i = 0; i < data.length; i++)
-		{
-			start += '<li>' + data[i] + '</li>'; // if Name is property of your Person object
-		}
-		start+=end
-			$("#suggesstion-box").html(start);
-			$("#search-box").css("background","#FFF");
-			
-		}
-		});
-	}
 	});
-});
-//To select country name
-function selectCountry(val) {
-$("#search-box").val(val);
-$("#suggesstion-box").hide();
-}
+
+	//To select country name
+	function selectCountry(val) {
+		$("#search-box").val(val);
+		$("#suggesstion-box").hide();
+	}
 
 </script>
 	
